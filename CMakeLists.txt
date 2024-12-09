@@ -5,12 +5,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(fried.communication STATIC
-    headers/fried.communication.h
-    src/fried.communication.cpp
+    headers/fried_communication.h
+    src/fried_communication.cpp
 )
 
 target_include_directories(fried.communication PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/headers
 )
 
-add_subdirectory(test.app)
+add_subdirectory(test_app)
