@@ -12,7 +12,7 @@
 namespace fried_communication
 {
 
-class TCPClient final : public Connection
+class TCPClient final : public ConnectionInterface
 {
 public:
     TCPClient(const std::string& ip, const uint16_t& port);

@@ -12,7 +12,7 @@
 namespace fried_communication
 {
 
-class TCPServer final : public Connection
+class TCPServer final : public ConnectionInterface
 {
 public:
     TCPServer(const std::string& ip, const uint16_t& port);

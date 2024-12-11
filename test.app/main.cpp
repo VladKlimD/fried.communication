@@ -21,7 +21,7 @@ int main(int, char**)
 
     std::cout << std::endl << fried_communication::connectionTypeToString(selectedType) << std::endl;
     std::cout << "**************************" << std::endl;
-    std::shared_ptr<fried_communication::Connection> connection { nullptr };
+    fried_communication::FConnection connection { nullptr };
     switch (static_cast<fried_communication::ConnectionType>(selectedType))
     {
         case fried_communication::TCP_SERVER:
