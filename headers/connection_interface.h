@@ -1,27 +1,33 @@
 #pragma once
 
-#include <stdint.h>
+#include <thread>
+#include <cstdint>
 #include <string>
-#include <vector>
-#include <memory>
 
-class ConnectionInterface
+namespace fried_communication
+{
+
+enum ConnectionType : uint8_t
+{
+    TCP_SERVER,
+    TCP_CLIENT,
+    END
+};
+
+std::string connectionTypeToString(const ConnectionType& type);
+std::string connectionTypeToString(const uint8_t& type);
+
+class Connection
 {
 public:
-    virtual ~ConnectionInterface() = default;
+    virtual ~Connection() = default;
+    friend class FriedCommunication;
 
-    // client
-    virtual bool connect(const std::string& address, uint32_t port) = 0;
-    virtual void disconnect() = 0;
+protected:
+    virtual void create() = 0;
+    virtual void close() = 0;
 
-    virtual bool send(const std::vector<uint8_t>& data) = 0;
-    virtual std::vector<uint8_t> recieve(const size_t& size) = 0;
-
-    virtual bool isConnected() const = 0;
-
-    // server
-    virtual bool startListening(uint32_t port) = 0;
-    virtual std::shared_ptr<ConnectionInterface> acceptConnection() = 0;
-    virtual void stopListening() = 0;
-    virtual bool isListening() const = 0;
+    ConnectionType m_connectionType { ConnectionType::END };
 };
+
+} // fried_communication
