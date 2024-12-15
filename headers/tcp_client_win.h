@@ -15,7 +15,7 @@ namespace fried_communication
 class TCPClient final : public ConnectionInterface
 {
 public:
-    TCPClient(const std::string& ip, const uint16_t& port);
+    TCPClient(ParserInterface* parser, const std::string& ip, const uint16_t& port);
     ~TCPClient() override;
 
     void sendData(const char* data, const size_t& dataSize) override;

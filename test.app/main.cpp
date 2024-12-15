@@ -43,7 +43,7 @@ std::string userInput()
             std::cout << "Enter port number: " << std::endl << "> ";
             const uint16_t port { static_cast<uint16_t>(std::stoi(userInput())) };
 
-            connection = FCommunication.createTCPServer(ip, port);
+            connection = FCommunication.createTCPServer(new fried_communication::ParserInterface(), ip, port);
             break;
         }
         case fried_communication::TCP_CLIENT:
@@ -54,7 +54,7 @@ std::string userInput()
             std::cout << "Enter port number: " << std::endl << "> ";
             const uint16_t port { static_cast<uint16_t>(std::stoi(userInput())) };
 
-            connection = FCommunication.createTCPClient(ip, port);
+            connection = FCommunication.createTCPClient(new fried_communication::ParserInterface(), ip, port);
             break;
         }
         default:

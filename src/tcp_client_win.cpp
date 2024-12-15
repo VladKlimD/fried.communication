@@ -5,8 +5,8 @@
 namespace fried_communication
 {
 
-TCPClient::TCPClient(const std::string& ip, const uint16_t& port) :
-    m_ip { ip }, m_port { port }
+TCPClient::TCPClient(ParserInterface* parser, const std::string& ip, const uint16_t& port) :
+    ConnectionInterface { parser }, m_ip { ip }, m_port { port }
 {
     m_connectionType = ConnectionType::TCP_CLIENT;
 }
@@ -60,6 +60,7 @@ void TCPClient::create()
     }
 
     listenIncomingData(true);
+    parser()->start();
     std::cout << "client connect ok" << std::endl;
     std::cout << "ready for send and receive data" << std::endl;
 }
@@ -67,6 +68,7 @@ void TCPClient::create()
 void TCPClient::close()
 {
     listenIncomingData(false);
+    parser()->stop();
 
     if (m_clientSocket != INVALID_SOCKET)
     {
@@ -82,10 +84,11 @@ void TCPClient::checkIncomingData()
     while (isListeningIncomingData() && m_clientSocket != INVALID_SOCKET)
     {
         std::string incomingData(200, '\0');
-        if (recv(m_clientSocket, incomingData.data(), static_cast<int>(incomingData.size()), 0) > 0)
-        {
-            std::cout << "IncomingData: " << incomingData << std::endl;
-        }
+        const int incomingBytes { recv(m_clientSocket, incomingData.data(),
+                                        static_cast<int>(incomingData.size()), 0) };
+
+        if (incomingBytes > 0)
+            parser()->pushIncomingData(incomingData.data(), incomingBytes);
     }
 }
 

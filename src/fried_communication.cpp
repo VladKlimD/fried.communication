@@ -6,17 +6,17 @@
 namespace fried_communication
 {
 
-FConnection FriedCommunication::createTCPServer(const std::string& ip, const uint16_t& port)
+FConnection FriedCommunication::createTCPServer(ParserInterface* parser, const std::string& ip, const uint16_t& port)
 {
-    FConnection tcpServer { std::make_shared<TCPServer>(TCPServer(ip, port)) };
+    FConnection tcpServer { std::make_shared<TCPServer>(TCPServer(parser, ip, port)) };
     tcpServer->create();
     m_connections.push_back(tcpServer);
     return tcpServer;
 }
 
-FConnection FriedCommunication::createTCPClient(const std::string& ip, const uint16_t& port)
+FConnection FriedCommunication::createTCPClient(ParserInterface* parser, const std::string& ip, const uint16_t& port)
 {
-    FConnection tcpClient { std::make_shared<TCPClient>(TCPClient(ip, port)) };
+    FConnection tcpClient { std::make_shared<TCPClient>(TCPClient(parser, ip, port)) };
     tcpClient->create();
     m_connections.push_back(tcpClient);
     return tcpClient;

@@ -23,8 +23,8 @@ public:
         return friedCommunication;
     }
 
-    FConnection createTCPServer(const std::string& ip, const uint16_t& port);
-    FConnection createTCPClient(const std::string& ip, const uint16_t& port);
+    FConnection createTCPServer(ParserInterface* parser, const std::string& ip, const uint16_t& port);
+    FConnection createTCPClient(ParserInterface* parser, const std::string& ip, const uint16_t& port);
     void closeConnection(const FConnection& connection);
     void closeAllConnections();
 

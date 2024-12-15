@@ -1,5 +1,7 @@
 #pragma once
 
+#include "parser_interface.h"
+
 #include <cstdint>
 #include <string>
 #include <thread>
@@ -20,11 +22,13 @@ std::string connectionTypeToString(const uint8_t& type);
 class ConnectionInterface
 {
 public:
+    explicit ConnectionInterface(ParserInterface* parser) : m_parser { parser } {}
     virtual ~ConnectionInterface() = default;
     friend class FriedCommunication;
 
     virtual void sendData(const char* data, const size_t& dataSize) = 0;
 
+    [[nodiscard]] ParserInterface* parser() const { return m_parser; };
     [[nodiscard]] inline ConnectionType connectionType() const { return m_connectionType; }
     [[nodiscard]] inline std::string connectionTypeStr() const { return connectionTypeToString(m_connectionType); }
     [[nodiscard]] inline bool isListeningIncomingData() const { return m_isListeningIncomingData; }
@@ -41,6 +45,7 @@ protected:
 private:
     std::thread* m_checkingIncomingThread { nullptr };
     bool m_isListeningIncomingData { false };
+    ParserInterface* m_parser { nullptr };
 };
 
 } // fried_communication

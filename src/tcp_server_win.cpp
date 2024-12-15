@@ -5,8 +5,8 @@
 namespace fried_communication
 {
 
-TCPServer::TCPServer(const std::string& ip, const uint16_t& port) :
-    m_ip { ip }, m_port { port }
+TCPServer::TCPServer(ParserInterface* parser, const std::string& ip, const uint16_t& port) :
+    ConnectionInterface { parser }, m_ip { ip }, m_port { port }
 {
     m_connectionType = ConnectionType::TCP_SERVER;
 }
@@ -80,11 +80,13 @@ void TCPServer::create()
     std::cout << "accept socket is ok" << std::endl;
 
     listenIncomingData(true);
+    parser()->start();
 }
 
 void TCPServer::close()
 {
     listenIncomingData(false);
+    parser()->stop();
 
     if (m_serverSocket != INVALID_SOCKET)
     {
@@ -106,10 +108,11 @@ void TCPServer::checkIncomingData()
     while (isListeningIncomingData() && m_acceptSocket != INVALID_SOCKET)
     {
         std::string incomingData(200, '\0');
-        if (recv(m_acceptSocket, incomingData.data(), static_cast<int>(incomingData.size()), 0) > 0)
-        {
-            std::cout << "incomingData" << incomingData << std::endl;
-        }
+        const int incomingBytes { recv(m_acceptSocket, incomingData.data(),
+                                        static_cast<int>(incomingData.size()), 0) };
+
+        if (incomingBytes > 0)
+            parser()->pushIncomingData(incomingData.data(), incomingBytes);
     }
 }
 

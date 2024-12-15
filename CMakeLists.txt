@@ -13,6 +13,8 @@ add_library(fried.communication STATIC
         headers/tcp_server_win.h
         src/tcp_client_win.cpp
         headers/tcp_client_win.h
+        src/parser_interface.cpp
+        headers/parser_interface.h
 )
 
 target_include_directories(fried.communication PUBLIC
