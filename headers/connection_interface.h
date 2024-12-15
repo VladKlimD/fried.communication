@@ -19,6 +19,8 @@ enum ConnectionType : uint8_t
 std::string connectionTypeToString(const ConnectionType& type);
 std::string connectionTypeToString(const uint8_t& type);
 
+using FParser = std::shared_ptr<ParserInterface>;
+
 class ConnectionInterface
 {
 public:
@@ -28,7 +30,7 @@ public:
 
     virtual void sendData(const char* data, const size_t& dataSize) = 0;
 
-    [[nodiscard]] ParserInterface* parser() const { return m_parser; };
+    [[nodiscard]] FParser parser() const { return m_parser; }
     [[nodiscard]] inline ConnectionType connectionType() const { return m_connectionType; }
     [[nodiscard]] inline std::string connectionTypeStr() const { return connectionTypeToString(m_connectionType); }
     [[nodiscard]] inline bool isListeningIncomingData() const { return m_isListeningIncomingData; }
@@ -45,7 +47,7 @@ protected:
 private:
     std::thread* m_checkingIncomingThread { nullptr };
     bool m_isListeningIncomingData { false };
-    ParserInterface* m_parser { nullptr };
+    FParser m_parser { nullptr };
 };
 
 } // fried_communication

@@ -32,7 +32,7 @@ void ParserInterface::stop()
     if (!m_parseThread)
         return;
 
-    m_parseThread->detach();
+    m_parseThread->join();
     delete m_parseThread;
     m_parseThread = nullptr;
 }
