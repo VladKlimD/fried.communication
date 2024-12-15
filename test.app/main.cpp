@@ -3,7 +3,19 @@
 #include <iostream>
 #include <cstdint>
 
-int main(int, char**)
+std::string userInput()
+{
+    std::string input;
+    std::getline(std::cin, input);
+    if (input == "exit")
+    {
+        FCommunication.closeAllConnections();
+        std::exit(EXIT_SUCCESS);
+    }
+    return input;
+}
+
+[[noreturn]] int main(int, char**)
 {
     std::cout << "**************************" << std::endl;
     std::cout << "Select type of connection:" << std::endl << std::endl;
@@ -11,9 +23,8 @@ int main(int, char**)
         std::cout << std::to_string(type) << ". " << fried_communication::connectionTypeToString(type) << std::endl;
     std::cout << "**************************" << std::endl << "> ";
 
-    int selectedType { fried_communication::END };
-    std::cin >> selectedType;
-    if (selectedType == fried_communication::END)
+    int selectedType { std::stoi(userInput()) };
+    if (fried_communication::connectionTypeToString(selectedType) == "UNKNOWN")
     {
         std::cout << "Connection type is unknown";
         return -1;
@@ -26,34 +37,36 @@ int main(int, char**)
     {
         case fried_communication::TCP_SERVER:
         {
-            std::string ip;
             std::cout << "Enter IP address: " << std::endl << "> ";
-            std::cin >> ip;
+            const std::string ip { userInput() };
 
-            uint16_t port;
             std::cout << "Enter port number: " << std::endl << "> ";
-            std::cin >> port;
+            const uint16_t port { static_cast<uint16_t>(std::stoi(userInput())) };
 
-            connection = fCommunication.createTCPServer(ip, port);
+            connection = FCommunication.createTCPServer(ip, port);
             break;
         }
         case fried_communication::TCP_CLIENT:
         {
-            std::string ip;
             std::cout << "Enter IP address: " << std::endl << "> ";
-            std::cin >> ip;
+            const std::string ip { userInput() };
 
-            uint16_t port;
             std::cout << "Enter port number: " << std::endl << "> ";
-            std::cin >> port;
+            const uint16_t port { static_cast<uint16_t>(std::stoi(userInput())) };
 
-            connection = fCommunication.createTCPClient(ip, port);
+            connection = FCommunication.createTCPClient(ip, port);
             break;
         }
         default:
             break;
     }
 
-    system("pause");
-    return 0;
+    while (true)
+    {
+        std::cout << std::endl << "Type data to send: " << std::endl << "> ";
+        std::string data { userInput() };
+        connection->sendData(data.data(), data.size());
+    }
+
+    FCommunication.closeAllConnections();
 }

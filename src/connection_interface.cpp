@@ -21,4 +21,27 @@ std::string connectionTypeToString(const uint8_t& type)
     return connectionTypeToString(static_cast<ConnectionType>(type));
 }
 
+void ConnectionInterface::listenIncomingData(const bool start)
+{
+    if (start)
+    {
+        if (m_checkingIncomingThread)
+            return;
+
+        m_isListeningIncomingData = true;
+        m_checkingIncomingThread = new std::thread(&ConnectionInterface::checkIncomingData, this);
+    }
+    else
+    {
+        if (!m_checkingIncomingThread)
+            return;
+
+        m_isListeningIncomingData = false;
+        m_checkingIncomingThread->detach();
+
+        delete m_checkingIncomingThread;
+        m_checkingIncomingThread = nullptr;
+    }
+}
+
 } // fried_communication

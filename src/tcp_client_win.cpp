@@ -16,6 +16,15 @@ TCPClient::~TCPClient()
     close();
 }
 
+void TCPClient::sendData(const char* data, const size_t& dataSize)
+{
+    if (m_clientSocket == INVALID_SOCKET)
+        return;
+
+    if (send(m_clientSocket, data, static_cast<int>(dataSize), 0) <= 0)
+        WSACleanup();
+}
+
 void TCPClient::create()
 {
     // setup dll
@@ -49,12 +58,16 @@ void TCPClient::create()
         close();
         return;
     }
+
+    listenIncomingData(true);
     std::cout << "client connect ok" << std::endl;
     std::cout << "ready for send and receive data" << std::endl;
 }
 
 void TCPClient::close()
 {
+    listenIncomingData(false);
+
     if (m_clientSocket != INVALID_SOCKET)
     {
         closesocket(m_clientSocket);
@@ -62,6 +75,18 @@ void TCPClient::close()
     }
 
     WSACleanup();
+}
+
+void TCPClient::checkIncomingData()
+{
+    while (isListeningIncomingData() && m_clientSocket != INVALID_SOCKET)
+    {
+        std::string incomingData(200, '\0');
+        if (recv(m_clientSocket, incomingData.data(), static_cast<int>(incomingData.size()), 0) > 0)
+        {
+            std::cout << "IncomingData: " << incomingData << std::endl;
+        }
+    }
 }
 
 } // fried_communication

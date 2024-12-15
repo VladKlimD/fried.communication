@@ -16,6 +16,15 @@ TCPServer::~TCPServer()
     close();
 }
 
+void TCPServer::sendData(const char* data, const size_t& dataSize)
+{
+    if (m_acceptSocket == INVALID_SOCKET)
+        return;
+
+    if (send(m_acceptSocket, data, static_cast<int>(dataSize), 0) <= 0)
+        WSACleanup();
+}
+
 void TCPServer::create()
 {
     // setup dll
@@ -69,10 +78,14 @@ void TCPServer::create()
         return;
     }
     std::cout << "accept socket is ok" << std::endl;
+
+    listenIncomingData(true);
 }
 
 void TCPServer::close()
 {
+    listenIncomingData(false);
+
     if (m_serverSocket != INVALID_SOCKET)
     {
         closesocket(m_serverSocket);
@@ -86,6 +99,18 @@ void TCPServer::close()
     }
 
     WSACleanup();
+}
+
+void TCPServer::checkIncomingData()
+{
+    while (isListeningIncomingData() && m_acceptSocket != INVALID_SOCKET)
+    {
+        std::string incomingData(200, '\0');
+        if (recv(m_acceptSocket, incomingData.data(), static_cast<int>(incomingData.size()), 0) > 0)
+        {
+            std::cout << "incomingData" << incomingData << std::endl;
+        }
+    }
 }
 
 } // fried_communication

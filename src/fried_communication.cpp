@@ -30,11 +30,16 @@ void FriedCommunication::closeConnection(const FConnection& connection)
     m_connections.erase(it);
 }
 
-FriedCommunication::~FriedCommunication()
+void FriedCommunication::closeAllConnections()
 {
     for (const FConnection& connection : m_connections)
         connection->close();
     m_connections.clear();
+}
+
+FriedCommunication::~FriedCommunication()
+{
+    closeAllConnections();
 }
 
 } // fried_communication
