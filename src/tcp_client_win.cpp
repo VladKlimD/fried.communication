@@ -18,7 +18,7 @@ TCPClient::~TCPClient()
 
 void TCPClient::sendData(const char* data, const size_t& dataSize)
 {
-    if (m_clientSocket == INVALID_SOCKET)
+    if (m_clientSocket == INVALID_SOCKET || dataSize == 0)
         return;
 
     if (send(m_clientSocket, data, static_cast<int>(dataSize), 0) <= 0)

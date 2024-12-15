@@ -64,8 +64,9 @@ std::string userInput()
     while (true)
     {
         std::cout << std::endl << "Type data to send: " << std::endl << "> ";
-        std::string data { userInput() };
-        connection->sendData(data.data(), data.size());
+        std::string dataStr { userInput() };
+        if (!dataStr.empty())
+            connection->sendData(dataStr.data(), dataStr.size());
     }
 
     FCommunication.closeAllConnections();

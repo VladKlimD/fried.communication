@@ -18,7 +18,7 @@ TCPServer::~TCPServer()
 
 void TCPServer::sendData(const char* data, const size_t& dataSize)
 {
-    if (m_acceptSocket == INVALID_SOCKET)
+    if (m_acceptSocket == INVALID_SOCKET || dataSize == 0)
         return;
 
     if (send(m_acceptSocket, data, static_cast<int>(dataSize), 0) <= 0)

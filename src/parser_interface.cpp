@@ -1,6 +1,7 @@
 #include "parser_interface.h"
 
 #include <iostream>
+#include <iomanip>
 
 namespace fried_communication
 {
@@ -39,7 +40,16 @@ void ParserInterface::stop()
 
 void ParserInterface::parse(const char* data, const size_t& size)
 {
-    std::cout << "Parsing... " << std::string(data, size) << std::endl;
+    std::cout << "Parsing... ";
+    for (size_t i = 0; i < size; ++i)
+    {
+        std::cout << std::hex
+                  << std::setw(2)
+                  << std::setfill('0')
+                  << (static_cast<unsigned int>(static_cast<unsigned char>(data[i])))
+                  << " ";
+    }
+    std::cout << std::endl;
 }
 
 void ParserInterface::processIncomingData()
